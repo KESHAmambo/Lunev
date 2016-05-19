@@ -41,8 +41,8 @@ double integral(int threads)
 {
 	const int a = 0;
 	const int b = 10000;
-	const int N = 10000 / 0.000001;
-	double h = (double(b) - a) / N;
+	const int N = 10000 / 0.00001;
+	double h = (b - a) / N;
 	double result  = 0;
 	double x = a;
 	

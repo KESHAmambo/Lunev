@@ -9,11 +9,13 @@ import java.net.*;
 public class MulticastThread extends Thread{
     private String groupIP;
     private int port;
+    protected static boolean serverFound;
 
     public MulticastThread(String groupID, int port)
     {
         this.groupIP = groupID;
         this.port = port;
+        this.serverFound = false;
     }
 
     public void run()

@@ -9,12 +9,12 @@ import java.lang.*;
 
 
 public class Server{
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) throws InterruptedException, SocketException {
         while(true) {
             try {
                 while (true) {
                     MulticastSocket multicastsocket = new MulticastSocket(4444);
-                    String groupIP = "127.0.0.1";
+                    String groupIP = "224.224.224.224";
                     InetAddress group = InetAddress.getByName(groupIP);
                     multicastsocket.joinGroup(group);
 
@@ -78,6 +78,7 @@ public class Server{
                         result += thread.getResult();
                     }
 
+                    Thread.sleep(5000);
 
                     System.out.println("Sending data ...");
                     msg = new Message(result);
@@ -86,20 +87,33 @@ public class Server{
                 }
             }
             // What I should do with exceptions?!
-
+            catch (UnknownHostException | InterruptedException | ClassNotFoundException e)
+            {
+                e.printStackTrace();
+            }
             catch (IOException e) {
                 if (e.getMessage().equals("Broken pipe")) {
                     System.err.println("Connection was closed...");
                     System.err.println("Next try to connect after 10 seconds");
                     Thread.sleep(10000);
 
-                } else
-                    e.printStackTrace();
-                System.err.println(e);
-            }
 
-            catch (InterruptedException | ClassNotFoundException e) {
-                e.printStackTrace();
+                } else if (e.getClass().getSimpleName().equals("EOFException"))
+                {
+                    System.err.println("Connection was closed...");
+                    System.err.println("Next try to connect after 10 seconds");
+                    Thread.sleep(10000);
+                }
+                else if(e.getMessage().equals("Connection reset"))
+                {
+                    System.err.println("Connection was closed...");
+                    System.err.println("Next try to connect after 10 seconds");
+                    Thread.sleep(10000);
+                }
+                else{
+                    e.printStackTrace();
+                    System.err.println(e);
+                }
             }
         }
 

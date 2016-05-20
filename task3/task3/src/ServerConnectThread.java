@@ -27,6 +27,7 @@ public final class ServerConnectThread extends Thread {
                 ServerThread servertthread = new ServerThread(server);
                 ServerConnectThread.Clients.add(servertthread);
                 ServerConnectThread.serverscount++;
+                MulticastThread.serverFound = true;
             }
 
         }
@@ -35,6 +36,7 @@ public final class ServerConnectThread extends Thread {
                 System.out.println("Connection timed out");
                 ServerConnectThread.connected = true;
                 System.out.println("Connected " + ServerConnectThread.serverscount + " servers.");
+                if(ServerConnectThread.serverscount == 0) MulticastThread.serverFound = false;
                 if (this.split) {
                     int partscount = ServerConnectThread.serverscount;
                     if (partscount > Task.getMatrixSize()) partscount = Task.getMatrixSize();
